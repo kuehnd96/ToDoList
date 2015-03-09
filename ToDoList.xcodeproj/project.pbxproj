@@ -64,6 +64,7 @@
 				9276A9421AAA4C8D0037C71A /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		9276A9421AAA4C8D0037C71A /* Products */ = {
 			isa = PBXGroup;
