@@ -54,17 +54,52 @@ class ToDoListTableViewController: UITableViewController {
 	
 	@IBAction func unwindToList(segue: UIStoryboardSegue)
 	{
+		var sourceController: AddToDoItemViewController = segue.sourceViewController as AddToDoItemViewController
+		var item = sourceController.toDoItem
 		
+		// ?? Property in AddToDoItemViewController can't be nil for default constructor
+		// So we use an empty itemName to indicate a to do item wasn't created
+		if (!item.itemName.isEmpty)
+		{
+			self.toDoItems.addObject(item)
+			
+			tableView.reloadData()
+		}
 	}
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ListPrototypeCell", forIndexPath: indexPath) as UITableViewCell
 
+		// Get the item that is diasplayed in this row
 		var toDoItem: ToDoItem = self.toDoItems[indexPath.item] as ToDoItem
+		
+		// Set the row lable to the item name
 		cell.textLabel?.text = toDoItem.itemName
+		
+		if (toDoItem.completed)
+		{
+			cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+		}
+		else
+		{
+			cell.accessoryType = UITableViewCellAccessoryType.None
+		}
 
         return cell
     }
+	
+	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		
+		// We don't want the row to be selected in the table view
+		tableView.deselectRowAtIndexPath(indexPath, animated: false)
+		
+		// Get the model object that was selected and update its state
+		var tappedItem: ToDoItem = self.toDoItems.objectAtIndex(indexPath.row) as ToDoItem
+		tappedItem.completed = !tappedItem.completed
+		
+		// Reload data for selected row
+		tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+	}
 
     /*
     // Override to support conditional editing of the table view.
